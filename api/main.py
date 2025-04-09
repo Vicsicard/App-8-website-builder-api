@@ -7,18 +7,18 @@ from .app8_routes import router as app8_router
 
 # Create FastAPI app
 app = FastAPI(
-    title="Website Builder API",
+    title="App 8 Website Builder API",
     description="API for building and managing personal brand websites",
     version="1.0.0"
 )
 
-# Add CORS middleware
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, replace with specific origins
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 # Include App 8 routes
@@ -292,6 +292,5 @@ async def process_build(build_id: str, user_id: str, preview_only: bool = False)
         )
 
 @app.get("/health")
-async def health_check() -> Dict[str, str]:
-    """Health check endpoint."""
-    return {"status": "healthy"}
+async def health_check():
+    return {"status": "healthy", "service": "app-8-website-builder-api"}
