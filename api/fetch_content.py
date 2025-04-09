@@ -21,12 +21,6 @@ logger = logging.getLogger(__name__)
 # ✅ STEP 2: SUPABASE INITIALIZATION
 load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Missing required Supabase environment variables")
-
 class ContentFetchError(Exception):
     """Custom exception for content fetching errors."""
     def __init__(self, message: str, table: str, details: Any = None):
@@ -39,8 +33,23 @@ class ContentFetcher:
     
     def __init__(self):
         """Initialize Supabase client connection."""
-        self.client: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        self.supabase_url = os.getenv('SUPABASE_URL')
+        self.supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        self.supabase: Optional[Client] = None
         
+        if not all([self.supabase_url, self.supabase_key]):
+            logger.warning("Missing Supabase environment variables. Some features may not work.")
+        else:
+            try:
+                self.supabase = create_client(self.supabase_url, self.supabase_key)
+                logger.info("Successfully initialized Supabase client")
+            except Exception as e:
+                logger.error(f"Failed to initialize Supabase client: {str(e)}")
+
+    def is_ready(self) -> bool:
+        """Check if the ContentFetcher is properly initialized"""
+        return self.supabase is not None
+
     async def _fetch_table_data(self, table: str, user_id: str, select_fields: str, 
                               status_field: str = 'status', status_value: str = 'approved', 
                               order_by: str = None) -> Tuple[List[Dict[str, Any]], Optional[str]]:
@@ -58,8 +67,11 @@ class ContentFetcher:
         Returns:
             Tuple of (data list, error message if any)
         """
+        if not self.is_ready():
+            raise RuntimeError("ContentFetcher is not properly initialized. Check Supabase configuration.")
+        
         try:
-            query = self.client.table(table)\
+            query = self.supabase.table(table)\
                 .select(select_fields)\
                 .eq('user_id', user_id)\
                 .eq(status_field, status_value)

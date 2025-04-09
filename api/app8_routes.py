@@ -51,6 +51,11 @@ async def _build_site_async(
     try:
         # Initialize components
         content_fetcher = ContentFetcher()
+        if not content_fetcher.is_ready():
+            raise HTTPException(
+                status_code=503,
+                detail="Service not fully configured. Check Supabase settings."
+            )
         site_builder = SiteBuilder()
         publisher = Publisher()
         
@@ -162,4 +167,11 @@ async def get_build_status(build_id: str) -> Dict[str, Any]:
 
 @router.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "website-builder-api"}
+    """Health check endpoint that also reports Supabase connection status"""
+    content_fetcher = ContentFetcher()
+    status = {
+        "status": "healthy",
+        "service": "website-builder-api",
+        "supabase_connection": "ready" if content_fetcher.is_ready() else "not configured"
+    }
+    return status
