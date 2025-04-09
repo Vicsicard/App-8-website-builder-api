@@ -2,13 +2,13 @@
 FastAPI routes for App 8 - Personal Brand Website Builder.
 """
 from typing import Dict, Any
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from pydantic import BaseModel, Field
 import logging
-from ..fetch_content import ContentFetcher
-from ..builder import SiteBuilder, BuildError
-from ..publish import Publisher
-from ..validation import validate_content
+from .fetch_content import ContentFetcher
+from .builder import SiteBuilder, BuildError
+from .publish import Publisher
+from .validation import validate_content
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -159,3 +159,7 @@ async def get_build_status(build_id: str) -> Dict[str, Any]:
             status_code=500,
             detail=f"Failed to get build status: {str(e)}"
         )
+
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "website-builder-api"}
