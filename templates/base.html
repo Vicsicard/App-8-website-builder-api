@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if page_title %}{{ page_title }} | {% endif %}{{ site_title }}</title>
-    <meta name="description" content="{{ page_description }}">
+    <title>{{ content.bio.name if content.bio and content.bio.name else 'Personal Brand Website' }}</title>
+    <meta name="description" content="{{ content.bio.summary if content.bio and content.bio.summary else '' }}">
     
     <!-- Favicon -->
     {% if logo.url %}
@@ -85,7 +85,52 @@
 
     <!-- Main Content -->
     <main class="flex-grow">
-        {% block content %}{% endblock %}
+        <header>
+            <h1>{{ content.bio.name if content.bio and content.bio.name else 'Welcome' }}</h1>
+        </header>
+        
+        {% if content.bio %}
+        <section id="about">
+            <h2>About Me</h2>
+            {{ content.bio.content }}
+        </section>
+        {% endif %}
+
+        {% if content.story %}
+        <section id="story">
+            <h2>My Story</h2>
+            {{ content.story.content }}
+        </section>
+        {% endif %}
+
+        {% if content.blogs %}
+        <section id="blog">
+            <h2>Blog Posts</h2>
+            {% for post in content.blogs %}
+            <article>
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.excerpt }}</p>
+            </article>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        {% if content.videos %}
+        <section id="videos">
+            <h2>Videos</h2>
+            {% for video in content.videos %}
+            <div class="video">
+                <h3>{{ video.title }}</h3>
+                {% if video.video_id %}
+                <div class="video-embed">
+                    <!-- Placeholder for video embed -->
+                    Video ID: {{ video.video_id }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
     </main>
 
     <!-- Footer -->
@@ -137,7 +182,7 @@
             
             <!-- Copyright -->
             <div class="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600 text-sm">
-                <p>&copy; {{ current_year }} {{ site_title }}. All rights reserved.</p>
+                <p>&copy; {{ content.bio.name if content.bio and content.bio.name else 'Personal Brand' }} {% now 'Y' %}</p>
                 <p class="mt-2">
                     Built with <span class="text-red-500">&hearts;</span> by 
                     <a href="https://selfcast.studio" class="text-gray-900 hover:text-gray-700">Self Cast Studios</a>
