@@ -1,0 +1,179 @@
+/* Custom CSS generated from user's style profile */
+
+/* Typography */
+body {
+    font-family: var(--font-body, system-ui);
+    color: var(--color-text, #1a1a1a);
+    background-color: var(--color-background, #ffffff);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading, system-ui);
+    color: var(--color-primary, #1a1a1a);
+}
+
+/* Brand Colors */
+.brand-primary {
+    color: var(--color-primary);
+}
+
+.brand-secondary {
+    color: var(--color-secondary);
+}
+
+.brand-accent {
+    color: var(--color-accent);
+}
+
+.bg-brand-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-brand-secondary {
+    background-color: var(--color-secondary);
+}
+
+.bg-brand-accent {
+    background-color: var(--color-accent);
+}
+
+/* Links */
+a {
+    color: var(--color-primary);
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+    color: var(--color-secondary);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-secondary);
+    color: white;
+}
+
+.btn-outline {
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero Section */
+.hero {
+    background-color: var(--color-background);
+    padding: 4rem 0;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    color: var(--color-text);
+    opacity: 0.9;
+}
+
+/* Blog Posts */
+.blog-post h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.blog-post h2 {
+    font-size: 2rem;
+    margin: 2rem 0 1rem;
+}
+
+.blog-post h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem;
+}
+
+.blog-post p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+/* Testimonials */
+.testimonial {
+    border-left: 4px solid var(--color-accent);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+}
+
+.testimonial-author {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Video Gallery */
+.video-card {
+    aspect-ratio: 16/9;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.video-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Press Mentions */
+.press-logo {
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition: all 0.2s ease-in-out;
+}
+
+.press-logo:hover {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+/* Utilities */
+.text-gradient {
+    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.shadow-brand {
+    box-shadow: 0 4px 6px rgba(var(--color-primary-rgb), 0.1);
+}

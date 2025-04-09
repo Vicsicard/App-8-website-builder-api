@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Story Section -->
+<section class="container mx-auto px-4 py-16">
+    <!-- Hero -->
+    <div class="max-w-3xl mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--color-primary)">My Story</h1>
+        {% if bio.headline %}
+        <p class="text-xl text-gray-600">{{ bio.headline }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Story Timeline -->
+    <div class="max-w-4xl mx-auto">
+        {% for chunk in story_chunks %}
+        <div class="mb-16">
+            {% if loop.index % 2 == 0 %}
+            <!-- Right-aligned story chunk -->
+            <div class="flex flex-col md:flex-row-reverse items-center">
+                {% if chunk.image %}
+                <div class="w-full md:w-1/3 mb-6 md:mb-0 md:ml-8">
+                    <img src="{{ chunk.image }}" alt="{{ chunk.title }}" class="rounded-lg shadow-lg w-full">
+                </div>
+                {% endif %}
+                <div class="w-full md:w-2/3">
+                    <h2 class="text-2xl font-bold mb-4" style="color: var(--color-secondary)">{{ chunk.title }}</h2>
+                    <div class="prose max-w-none">
+                        {{ chunk.content | safe }}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Left-aligned story chunk -->
+            <div class="flex flex-col md:flex-row items-center">
+                {% if chunk.image %}
+                <div class="w-full md:w-1/3 mb-6 md:mb-0 md:mr-8">
+                    <img src="{{ chunk.image }}" alt="{{ chunk.title }}" class="rounded-lg shadow-lg w-full">
+                </div>
+                {% endif %}
+                <div class="w-full md:w-2/3">
+                    <h2 class="text-2xl font-bold mb-4" style="color: var(--color-secondary)">{{ chunk.title }}</h2>
+                    <div class="prose max-w-none">
+                        {{ chunk.content | safe }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Values Section -->
+    {% if values %}
+    <div class="max-w-4xl mx-auto mt-16 pt-16 border-t border-gray-200">
+        <h2 class="text-3xl font-bold text-center mb-12" style="color: var(--color-primary)">My Values</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for value in values %}
+            <div class="text-center p-6 bg-white rounded-lg shadow-md">
+                {% if value.icon %}
+                <i class="{{ value.icon }} text-3xl mb-4" style="color: var(--color-accent)"></i>
+                {% endif %}
+                <h3 class="text-xl font-semibold mb-3">{{ value.title }}</h3>
+                <p class="text-gray-600">{{ value.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Social Links -->
+    {% if social_links %}
+    <div class="max-w-2xl mx-auto mt-16 text-center">
+        <h2 class="text-2xl font-bold mb-8" style="color: var(--color-primary)">Connect With Me</h2>
+        <div class="flex justify-center space-x-6">
+            {% for link in social_links %}
+            <a href="{{ link.url }}" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="text-3xl hover:transform hover:scale-110 transition-transform"
+               style="color: var(--color-secondary)">
+                <i class="{{ link.icon }}"></i>
+                <span class="sr-only">{{ link.platform }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page_title %}{{ page_title }} | {% endif %}{{ site_title }}</title>
+    <meta name="description" content="{{ page_description }}">
+    
+    <!-- Favicon -->
+    {% if logo.url %}
+    <link rel="icon" type="image/png" href="{{ logo.url }}">
+    {% endif %}
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+    
+    <!-- Custom Fonts -->
+    <style>
+        :root {
+            --font-heading: {{ style | style_font('heading') }};
+            --font-body: {{ style | style_font('body') }};
+            --color-primary: {{ style | style_color('primary') }};
+            --color-secondary: {{ style | style_color('secondary') }};
+            --color-accent: {{ style | style_color('accent') }};
+            --color-text: {{ style | style_color('text') }};
+            --color-background: {{ style | style_color('background') }};
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center">
+                    {% if logo.url %}
+                    <img src="{{ logo.url }}" alt="{{ logo.alt }}" class="h-8 w-auto">
+                    {% else %}
+                    <span class="text-xl font-bold" style="color: var(--color-primary)">{{ site_title }}</span>
+                    {% endif %}
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    {% for item in navigation %}
+                    <a href="{{ item.url }}" 
+                       class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                       {% if item.url == current_page %}aria-current="page"{% endif %}>
+                        {{ item.title }}
+                    </a>
+                    {% endfor %}
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button type="button" id="mobile-menu-button" class="text-gray-500 hover:text-gray-900">
+                        <span class="sr-only">Open menu</span>
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="hidden md:hidden pb-3">
+                {% for item in navigation %}
+                <a href="{{ item.url }}" 
+                   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                   {% if item.url == current_page %}aria-current="page"{% endif %}>
+                    {{ item.title }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 mt-12">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Brand Info -->
+                <div>
+                    {% if logo.url %}
+                    <img src="{{ logo.url }}" alt="{{ logo.alt }}" class="h-8 w-auto mb-4">
+                    {% else %}
+                    <span class="text-xl font-bold block mb-4" style="color: var(--color-primary)">{{ site_title }}</span>
+                    {% endif %}
+                    <p class="text-gray-600 text-sm">
+                        {% if metadata.generated_at %}
+                        Last updated: {{ metadata.generated_at | format_date }}
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 uppercase mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        {% for item in navigation %}
+                        <li>
+                            <a href="{{ item.url }}" class="text-gray-600 hover:text-gray-900">{{ item.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <!-- Content Stats -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 uppercase mb-4">Content</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        {% if metadata.content_count.blogs %}
+                        <li>{{ metadata.content_count.blogs }} Blog Posts</li>
+                        {% endif %}
+                        {% if metadata.content_count.videos %}
+                        <li>{{ metadata.content_count.videos }} Videos</li>
+                        {% endif %}
+                        {% if metadata.content_count.story_chunks %}
+                        <li>{{ metadata.content_count.story_chunks }} Story Moments</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600 text-sm">
+                <p>&copy; {{ current_year }} {{ site_title }}. All rights reserved.</p>
+                <p class="mt-2">
+                    Built with <span class="text-red-500">&hearts;</span> by 
+                    <a href="https://selfcast.studio" class="text-gray-900 hover:text-gray-700">Self Cast Studios</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

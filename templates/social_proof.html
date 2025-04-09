@@ -1,0 +1,47 @@
+<!-- Social Proof Section -->
+<section class="py-12">
+    <div class="container mx-auto px-4">
+        <!-- Testimonials -->
+        {% if testimonials %}
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold mb-8">What People Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for testimonial in testimonials %}
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        {% if testimonial.avatar %}
+                        <img src="{{ testimonial.avatar }}" alt="{{ testimonial.name }}" class="w-12 h-12 rounded-full mr-4">
+                        {% endif %}
+                        <div>
+                            <h3 class="font-semibold">{{ testimonial.name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ testimonial.title }}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">{{ testimonial.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Media Mentions -->
+        {% if media_mentions %}
+        <div>
+            <h2 class="text-3xl font-bold mb-8">Featured In</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {% for mention in media_mentions %}
+                <a href="{{ mention.url }}" target="_blank" rel="noopener noreferrer" 
+                   class="group block">
+                    <div class="bg-white p-4 rounded-lg shadow-md transition-transform hover:scale-105">
+                        {% if mention.logo %}
+                        <img src="{{ mention.logo }}" alt="{{ mention.publication }}" class="h-12 object-contain mx-auto mb-2">
+                        {% endif %}
+                        <p class="text-center text-gray-600 text-sm group-hover:text-blue-600">{{ mention.publication }}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>

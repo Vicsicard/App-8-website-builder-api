@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-white py-20 text-center">
+  <div class="container mx-auto px-6">
+    {% if headshot.url %}
+    <img src="{{ headshot.url }}" alt="{{ headshot.alt }}" class="mx-auto w-32 h-32 rounded-full mb-6 object-cover shadow-lg"/>
+    {% endif %}
+    <h2 class="text-3xl font-semibold mb-2">{{ bio.name }}</h2>
+    <p class="text-gray-600 text-lg">{{ bio.headline }}</p>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-16 bg-gray-100">
+  <div class="container mx-auto px-6 max-w-3xl">
+    <h2 class="text-2xl font-bold mb-4">About Me</h2>
+    <p class="text-gray-700 leading-relaxed">
+      {{ bio.summary }}
+    </p>
+  </div>
+</section>
+
+<!-- Blog Section -->
+<section id="blog" class="py-16 bg-white">
+  <div class="container mx-auto px-6 max-w-4xl">
+    <h2 class="text-2xl font-bold mb-6">Latest Blog Posts</h2>
+    {% for post in latest_blogs %}
+    <article class="mb-8">
+      <h3 class="text-xl font-semibold">
+        <a href="/blog/{{ post.slug }}.html" class="hover:text-blue-600 transition">
+          {{ post.title }}
+        </a>
+      </h3>
+      <p class="text-gray-600 text-sm">{{ post.published_at | format_date }} · 
+        {% for tag in post.tags %}
+        <span class="inline-block">#{{ tag }}</span>
+        {% endfor %}
+      </p>
+      <p class="text-gray-700 mt-2">{{ post.excerpt }}</p>
+    </article>
+    {% endfor %}
+    {% if latest_blogs %}
+    <div class="text-center mt-8">
+      <a href="/blog/" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        View All Posts
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Video Gallery -->
+<section id="videos" class="py-16 bg-gray-100">
+  <div class="container mx-auto px-6 max-w-4xl">
+    <h2 class="text-2xl font-bold mb-6">Watch & Listen</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      {% for video in featured_videos %}
+      <div class="bg-white p-4 shadow rounded">
+        <div class="relative pb-[56.25%] h-0 mb-2">
+          <iframe 
+            class="absolute top-0 left-0 w-full h-full" 
+            src="{{ video.url | replace('watch?v=', 'embed/') if 'youtube.com' in video.url else video.url }}" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+        <h4 class="text-lg font-semibold">{{ video.title }}</h4>
+        {% if video.description %}
+        <p class="text-gray-600 text-sm mt-1">{{ video.description | truncate_words(20) }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% if featured_videos %}
+    <div class="text-center mt-8">
+      <a href="/videos.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        View All Videos
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- My Story Preview -->
+<section id="story" class="py-16 bg-white">
+  <div class="container mx-auto px-6 max-w-3xl">
+    <h2 class="text-2xl font-bold mb-4">My Story</h2>
+    {% if story_preview %}
+    {% set preview = story_preview[0] %}
+    <div class="prose max-w-none text-gray-700">
+      <h3 class="text-xl font-semibold mb-2">{{ preview.title }}</h3>
+      <p class="leading-relaxed">{{ preview.content | truncate_words(100) }}</p>
+    </div>
+    <div class="text-center mt-8">
+      <a href="/story.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        Read My Full Story
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-12 bg-white border-t">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h3 class="text-xl font-semibold mb-2">Get In Touch</h3>
+    <p class="text-gray-600 mb-4">Want to connect, collaborate, or learn more?</p>
+    {% if bio.email %}
+    <a href="mailto:{{ bio.email }}" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+      Email Me
+    </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
