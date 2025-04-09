@@ -11,7 +11,7 @@ services:
         sync: false
       - key: SUPABASE_PROJECT_ID
         sync: false
-      - key: SUPABASE_ANON_KEY
+      - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
     healthCheckPath: /api/v1/health
     autoDeploy: true

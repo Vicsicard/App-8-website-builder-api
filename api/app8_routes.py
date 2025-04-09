@@ -1,21 +1,23 @@
 """
 FastAPI routes for App 8 - Personal Brand Website Builder.
 """
-from typing import Dict, Any
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
-from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
+from pydantic import BaseModel
 import logging
+
 from .fetch_content import ContentFetcher
-from .builder import SiteBuilder, BuildError
+from .builder import WebsiteBuilder
 from .publish import Publisher
-from .validation import validate_content
+from .constants import WEBSITE_STATUS
+from .utils import validate_user_input
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Create router
-router = APIRouter(prefix="/app8", tags=["Personal Brand Website"])
+router = APIRouter(prefix="/api/v1", tags=["website-builder"])
 
 class BuildRequest(BaseModel):
     """Request model for site building."""
@@ -56,7 +58,7 @@ async def _build_site_async(
                 status_code=503,
                 detail="Service not fully configured. Check Supabase settings."
             )
-        site_builder = SiteBuilder()
+        site_builder = WebsiteBuilder()
         publisher = Publisher()
         
         # Fetch content
@@ -64,10 +66,13 @@ async def _build_site_async(
         content = await content_fetcher.fetch_all_content(user_id)
         
         # Validate content
-        validation_result = validate_content(content)
+        validation_result = validate_user_input(content)
         if not validation_result.is_valid:
             error_msg = "\n".join(validation_result.errors)
-            raise BuildError(f"Content validation failed:\n{error_msg}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Content validation failed:\n{error_msg}"
+            )
         
         # Log any warnings
         for warning in validation_result.warnings:
@@ -94,15 +99,9 @@ async def _build_site_async(
             "message": f"Successfully published {build_type} site"
         }
         
-    except BuildError as e:
+    except HTTPException as e:
         logger.error(f"Build error for user {user_id}: {str(e)}")
-        if e.validation_result:
-            for warning in e.validation_result.warnings:
-                logger.warning(warning)
-        raise HTTPException(
-            status_code=400,
-            detail=str(e)
-        )
+        raise e
         
     except Exception as e:
         logger.error(f"Unexpected error for user {user_id}: {str(e)}")
